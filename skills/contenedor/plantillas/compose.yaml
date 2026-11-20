@@ -1,0 +1,40 @@
+# Plantilla Compose. Ajusta: nombre del servicio, puerto interno, variables.
+# Levantar y esperar a que quede sano:  docker compose up -d --build --wait
+services:
+  app:
+    image: ${IMAGE:-mi-proyecto:local}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+        REVISION: ${REVISION:-desconocida}
+    ports:
+      - "${PORT:-8000}:8000"        # host:contenedor. Cambia PORT en .env si el puerto está ocupado.
+    env_file:
+      - path: .env
+        required: false             # sin .env también arranca, con los valores por defecto
+    environment:
+      DB_PATH: /data/app.db         # configuración: por entorno, nunca dentro de la imagen
+    volumes:
+      - datos:/data                 # datos persistentes: sobreviven a recrear el contenedor
+    restart: unless-stopped
+
+  # Si necesitas una base de datos aparte, descomenta y usa depends_on con salud:
+  # db:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:?Define DB_PASSWORD en .env}
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 5s
+  #     retries: 10
+  # y en app:
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+
+volumes:
+  datos:
+  # pgdata:

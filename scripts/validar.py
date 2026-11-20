@@ -1,0 +1,81 @@
+#!/usr/bin/env python3
+"""Valida la estructura del plugin sin dependencias externas.
+
+- manifiestos JSON parsean y comparten versión
+- cada skill, agente y comando tiene frontmatter con los campos requeridos
+- el nombre de cada skill coincide con su carpeta
+- las plantillas que menciona cada SKILL.md existen
+- ningún archivo contiene algo con pinta de secreto
+Uso: python3 scripts/validar.py
+"""
+import json
+import pathlib
+import re
+import sys
+
+RAIZ = pathlib.Path(__file__).resolve().parent.parent
+errores: list[str] = []
+
+
+def frontmatter(ruta: pathlib.Path) -> dict:
+    texto = ruta.read_text(encoding="utf-8")
+    m = re.match(r"^---\n(.*?)\n---\n", texto, re.S)
+    if not m:
+        errores.append(f"{ruta.relative_to(RAIZ)}: sin frontmatter")
+        return {}
+    campos = {}
+    for linea in m.group(1).splitlines():
+        if ":" in linea and not linea.startswith((" ", "-")):
+            clave, valor = linea.split(":", 1)
+            campos[clave.strip()] = valor.strip()
+    return campos
+
+
+def requerir(ruta: pathlib.Path, campos: dict, *claves: str) -> None:
+    for c in claves:
+        if not campos.get(c):
+            errores.append(f"{ruta.relative_to(RAIZ)}: falta '{c}' en el frontmatter")
+
+
+plugin = json.loads((RAIZ / ".claude-plugin/plugin.json").read_text(encoding="utf-8"))
+market = json.loads((RAIZ / ".claude-plugin/marketplace.json").read_text(encoding="utf-8"))
+entrada = next((p for p in market["plugins"] if p["name"] == plugin["name"]), None)
+if not entrada:
+    errores.append("marketplace.json no lista el plugin de plugin.json")
+elif entrada.get("version") != plugin["version"]:
+    errores.append(f"versión distinta: plugin.json {plugin['version']} vs marketplace.json {entrada.get('version')}")
+version_archivo = (RAIZ / "VERSION").read_text(encoding="utf-8").strip()
+if version_archivo != plugin["version"]:
+    errores.append(f"VERSION ({version_archivo}) no coincide con plugin.json ({plugin['version']})")
+
+for skill in sorted((RAIZ / "skills").glob("*/SKILL.md")):
+    f = frontmatter(skill)
+    requerir(skill, f, "name", "description")
+    if f.get("name") and f["name"] != skill.parent.name:
+        errores.append(f"{skill.relative_to(RAIZ)}: name '{f['name']}' no coincide con la carpeta")
+    for ref in re.findall(r"plantillas/([\w.\-]+)", skill.read_text(encoding="utf-8")):
+        if not (skill.parent / "plantillas" / ref).exists():
+            errores.append(f"{skill.relative_to(RAIZ)}: menciona plantillas/{ref}, que no existe")
+
+for agente in sorted((RAIZ / "agents").glob("*.md")):
+    f = frontmatter(agente)
+    requerir(agente, f, "name", "description")
+    if f.get("name") and f["name"] != agente.stem:
+        errores.append(f"{agente.relative_to(RAIZ)}: name no coincide con el archivo")
+
+for comando in sorted((RAIZ / "commands").glob("*.md")):
+    requerir(comando, frontmatter(comando), "description")
+
+SECRETO = re.compile(r"(AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{30,}|-----BEGIN [A-Z ]*PRIVATE KEY-----|xox[baprs]-[A-Za-z0-9-]{10,})")
+for archivo in RAIZ.rglob("*"):
+    if archivo.is_file() and ".git" not in archivo.parts and archivo.suffix not in {".png", ".jpg"}:
+        if SECRETO.search(archivo.read_text(encoding="utf-8", errors="ignore")):
+            errores.append(f"{archivo.relative_to(RAIZ)}: contiene algo con pinta de secreto")
+
+n_skills = len(list((RAIZ / "skills").glob("*/SKILL.md")))
+n_agentes = len(list((RAIZ / "agents").glob("*.md")))
+n_comandos = len(list((RAIZ / "commands").glob("*.md")))
+if errores:
+    print("\n".join(f"ERROR  {e}" for e in errores))
+    sys.exit(1)
+print(f"OK  v{plugin['version']} · {n_skills} skills · {n_agentes} agentes · {n_comandos} comandos")

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "estudia",
+  "owner": {
+    "name": "Santiago Henao",
+    "url": "https://github.com/santiagohenao97"
+  },
+  "metadata": {
+    "description": "Herramientas del curso Estud-IA Nube · Intermedio"
+  },
+  "plugins": [
+    {
+      "name": "estudia-nube",
+      "source": "./",
+      "description": "Contenedores (Docker/Compose) e integración continua (GitHub Actions) para tu proyecto, con evidencia honesta de lo que se ejecutó.",
+      "version": "0.1.0"
+    }
+  ]
+}

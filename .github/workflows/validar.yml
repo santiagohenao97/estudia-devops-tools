@@ -1,0 +1,56 @@
+# El repo de herramientas también tiene su CI: valida la estructura del plugin y las plantillas
+# con las mismas reglas que enseña.
+name: validar
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validar-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  estructura:
+    name: Estructura del plugin
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validar manifiestos, frontmatter y plantillas referenciadas
+        run: python scripts/validar.py
+
+  plantillas-ci:
+    name: Plantillas de GitHub Actions (actionlint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: actionlint
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color \
+            .github/workflows/*.yml skills/ci-github-actions/plantillas/*.yml
+
+  plantillas-docker:
+    name: Plantillas de Dockerfile (hadolint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: hadolint
+        run: |
+          set -o pipefail
+          estado=0
+          for f in skills/contenedor/plantillas/Dockerfile.*; do
+            echo "== $f"
+            docker run --rm -i hadolint/hadolint:v2.12.0 hadolint --failure-threshold error - < "$f" || estado=1
+          done
+          exit "$estado"
