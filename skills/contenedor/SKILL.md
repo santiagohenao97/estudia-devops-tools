@@ -17,7 +17,7 @@ El agente propone; quien estudia verifica y decide.
 5. **Demostrar que funciona**:
    - `docker build -t <proyecto>:local .`
    - `docker compose up -d --build --wait` (espera al chequeo de salud)
-   - una petición real al servicio (por ejemplo `curl -fsS http://localhost:<puerto>/salud`)
+   - una petición real al servicio (por ejemplo `curl -fsS http://localhost:<puerto>/health`)
    - recrear el contenedor (`docker compose down` y `up` de nuevo, **sin** `-v`) y comprobar que los datos siguen ahí.
 6. **Romperlo una vez a propósito** (puerto ocupado, variable faltante, salud que falla) y leer el error con la persona.
 7. **Escribir la ficha** `docs/contenedor.md` con el formato de abajo y etiquetas de la skill `etiquetas-evidencia`.
@@ -26,7 +26,7 @@ El agente propone; quien estudia verifica y decide.
 
 - **Imagen base con versión fija** (`python:3.12-slim`, `node:22-alpine`). Nunca `:latest`.
 - **Usuario sin privilegios**: créalo, da permisos solo a la carpeta donde escribe, y `USER`.
-- **`HEALTHCHECK` que pruebe algo real**: el endpoint de salud de la app, idealmente uno que toque la base de datos. "El proceso existe" no es salud.
+- **`HEALTHCHECK` que pruebe algo real**: el endpoint de salud de la app, por convención `GET /health` (en Spring Boot, `/actuator/health`), idealmente uno que toque la base de datos. "El proceso existe" no es salud.
 - **Configuración fuera de la imagen**: variables de entorno vía Compose y `.env`. `.env` nunca se sube a git; `.env.example` siempre (con valores falsos o vacíos).
 - **Datos persistentes en un volumen con nombre**, montado en una sola ruta (`/data`).
 - **`.dockerignore`** excluye `.git`, `.env`, dependencias locales (`node_modules`, `.venv`, `target`), pruebas y documentos que la imagen no necesita.
@@ -67,7 +67,7 @@ El agente propone; quien estudia verifica y decide.
 
 ```
 # Contenedor
-Imagen base: …   Usuario: …   Puerto: …   Salud: <ruta>   Datos: <volumen> en <ruta>
+Imagen base: …   Usuario: …   Puerto: …   Salud: /health   Datos: <volumen> en <ruta>
 Levantar: docker compose up -d --build --wait
 
 ## Estado real

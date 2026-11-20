@@ -7,7 +7,7 @@ Verifica el servicio en el estado actual del repositorio.
 
 ## 1. Levantar y comprobar
 - Si el proyecto tiene su propio comando (`./dev`, `make up`, script en `package.json`), úsalo y dilo. Si no, `docker compose up -d --build --wait`.
-- Haz una petición real al servicio (la ruta de salud o una operación del dominio) con `curl -fsS`.
+- Haz una petición real al servicio (`/health` o una operación del dominio) con `curl -fsS`.
 - Si todo sale bien, resume en dos líneas qué quedó **ejecutado** y qué sigue **solo diseñado**, y detente.
 
 ## 2. Si falló, diagnostica

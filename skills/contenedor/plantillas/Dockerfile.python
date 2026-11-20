@@ -26,6 +26,6 @@ EXPOSE 8000
 
 # La salud la comprueba quien orquesta el contenedor. Usa Python porque la imagen slim no trae curl.
 HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=5 \
-  CMD python -c "import os,urllib.request as u; u.urlopen('http://localhost:%s/salud' % os.environ['PORT'], timeout=2)"
+  CMD python -c "import os,urllib.request as u; u.urlopen('http://localhost:%s/health' % os.environ['PORT'], timeout=2)"
 
 CMD ["python", "-m", "app.main"]

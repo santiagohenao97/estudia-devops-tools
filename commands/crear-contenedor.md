@@ -12,7 +12,7 @@ Aplica la skill `contenedor` a este proyecto. Lo que la persona quiere lograr: $
 5. Con confirmación: créalos, verifica con `git check-ignore .env` que `.env` esté ignorado (si no, propón la línea para `.gitignore`), y demuéstralo:
    - `docker build -t <proyecto>:local .`
    - `docker compose up -d --build --wait`
-   - una petición real (`curl -fsS http://localhost:<puerto>/<salud>`)
+   - una petición real (`curl -fsS http://localhost:<puerto>/health`)
    - `docker compose down` y `up` otra vez (sin `-v`) para comprobar que los datos siguen.
 6. Si algo falla, lee los logs (`docker compose logs --tail 30`), explica la causa con la línea de evidencia y propone el arreglo.
 7. Escribe `docs/contenedor.md` con la tabla de estado real.

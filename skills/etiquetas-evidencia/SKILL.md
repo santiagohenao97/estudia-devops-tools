@@ -11,7 +11,7 @@ Un verde no es una garantía. Quien lee tu reporte debe saber **qué corrió de 
 
 | Etiqueta | Significa | Ejemplo |
 |---|---|---|
-| **ejecutado** | Lo corriste completo en el entorno que importa y viste la salida. | `docker compose up --wait` terminó bien y `/salud` respondió 200. |
+| **ejecutado** | Lo corriste completo en el entorno que importa y viste la salida. | `docker compose up --wait` terminó bien y `/health` respondió 200. |
 | **comprobado con una muestra** | Corrió, pero en un caso parcial o en un entorno equivalente, no el real. | Las pruebas pasaron en tu portátil; el workflow aún no ha corrido en GitHub. |
 | **solo diseñado** | Está escrito pero nadie lo ha corrido. | El job de publicar la imagen existe en el YAML; nunca se disparó. |
 

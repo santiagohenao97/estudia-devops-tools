@@ -21,8 +21,8 @@ COPY --from=build /out/app /app
 USER nonroot
 EXPOSE 8080
 
-# Distroless no trae curl ni shell: el binario acepta "-salud" y consulta su propio endpoint.
-# Ejemplo en Go: if len(os.Args) > 1 && os.Args[1] == "-salud" { resp, err := http.Get("http://localhost:"+os.Getenv("PORT")+"/salud"); ... os.Exit(...) }
-HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=5 CMD ["/app", "-salud"]
+# Distroless no trae curl ni shell: el binario acepta "-health" y consulta su propio endpoint.
+# Ejemplo en Go: if len(os.Args) > 1 && os.Args[1] == "-health" { resp, err := http.Get("http://localhost:"+os.Getenv("PORT")+"/health"); ... os.Exit(...) }
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=5 CMD ["/app", "-health"]
 
 ENTRYPOINT ["/app"]
