@@ -1,0 +1,55 @@
+# This repo has its own CI: it validates the plugin structure and the templates with the same rules it teaches.
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  estructura:
+    name: Plugin structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate manifests, frontmatter, referenced templates and dist/
+        run: python scripts/validate.py
+
+  ci-templates:
+    name: GitHub Actions templates (actionlint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: actionlint
+        run: |
+          docker run --rm -v "$PWD:/repo" -w /repo rhysd/actionlint:1.7.7 -color \
+            .github/workflows/*.yml skills/github-actions-ci/templates/*.yml
+
+  docker-templates:
+    name: Dockerfile templates (hadolint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: hadolint
+        run: |
+          set -o pipefail
+          estado=0
+          for f in skills/container/templates/Dockerfile.*; do
+            echo "== $f"
+            docker run --rm -i hadolint/hadolint:v2.12.0 hadolint --failure-threshold error - < "$f" || estado=1
+          done
+          exit "$estado"

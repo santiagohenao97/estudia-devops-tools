@@ -1,0 +1,40 @@
+# Compose template. Adjust: service name, internal port, variables.
+# Start and wait until healthy:  docker compose up -d --build --wait
+services:
+  app:
+    image: ${IMAGE:-my-project:local}
+    build:
+      context: .
+      args:
+        APP_VERSION: ${APP_VERSION:-dev}
+        REVISION: ${REVISION:-unknown}
+    ports:
+      - "${PORT:-8000}:8000"        # host:container. Change PORT in .env if the port is taken.
+    env_file:
+      - path: .env
+        required: false             # starts without .env too, using the defaults
+    environment:
+      DB_PATH: /data/app.db         # configuration comes from the environment, never baked into the image
+    volumes:
+      - data:/data                  # persistent data: survives recreating the container
+    restart: unless-stopped
+
+  # Need a separate database? Uncomment and gate the app on its health:
+  # db:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 5s
+  #     retries: 10
+  # and under app:
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+
+volumes:
+  data:
+  # pgdata:

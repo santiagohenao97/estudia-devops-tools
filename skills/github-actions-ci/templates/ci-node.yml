@@ -1,0 +1,36 @@
+# Plantilla: pruebas de un proyecto Node. Copia a .github/workflows/ci.yml.
+# Usa los scripts de package.json: el CI corre lo mismo que tu portátil.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: Pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Lint (si existe el script)
+        run: npm run lint --if-present
+      - name: Correr pruebas
+        run: npm test
+      - name: Compilar (si existe el script)
+        run: npm run build --if-present

@@ -1,0 +1,32 @@
+# Plantilla: pruebas de un proyecto Go. Copia a .github/workflows/ci.yml.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pruebas:
+    name: Pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Revisar formato y errores comunes
+        run: |
+          test -z "$(gofmt -l .)" || { gofmt -l .; echo "Corre gofmt -w ."; exit 1; }
+          go vet ./...
+      - name: Correr pruebas
+        run: go test -race -v ./...

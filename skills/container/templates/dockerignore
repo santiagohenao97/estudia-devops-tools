@@ -1,0 +1,26 @@
+# Copy this file as .dockerignore at the project root.
+# What is not in the image cannot leak and does not slow down the build.
+.git
+.github
+.gitignore
+.env
+.env.*
+!.env.example
+**/__pycache__
+**/*.pyc
+.venv
+venv
+node_modules
+target
+build
+dist
+coverage
+.coverage
+tests
+docs
+*.md
+Dockerfile
+compose.yaml
+.DS_Store
+.idea
+.vscode

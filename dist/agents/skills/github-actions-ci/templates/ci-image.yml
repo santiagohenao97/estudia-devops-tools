@@ -1,0 +1,40 @@
+# Plantilla: construir la imagen y comprobar que el servicio arranca sano (une el Encuentro 3 con el 4).
+# Requiere Dockerfile y compose.yaml con healthcheck. Copia a .github/workflows/imagen.yml
+# o agrega el job "servicio" a tu ci.yml con needs: pruebas.
+name: imagen
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: imagen-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  servicio:
+    name: Construir y levantar el servicio
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_VERSION: ${{ github.sha }}
+      PORT: "8000"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir y esperar a que quede sano
+        run: docker compose up -d --build --wait --wait-timeout 90
+      - name: Petición real al servicio
+        run: curl -fsS "http://localhost:${PORT}/health"
+      - name: Mostrar logs si falló
+        if: failure()
+        run: |
+          docker compose ps
+          docker compose logs --no-color --tail 50
+      - name: Limpiar
+        if: always()
+        run: docker compose down -v
