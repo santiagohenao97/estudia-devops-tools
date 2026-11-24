@@ -20,8 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
           cache: pip    # requiere requirements*.txt o pyproject.toml; bórralo si no hay dependencias
@@ -36,7 +36,7 @@ jobs:
         # con pytest:  python -m pytest -v 2>&1 | tee salida-pruebas.txt
       - name: Guardar la salida
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: salida-pruebas
           path: salida-pruebas.txt

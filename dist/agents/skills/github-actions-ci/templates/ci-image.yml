@@ -25,7 +25,7 @@ jobs:
       APP_VERSION: ${{ github.sha }}
       PORT: "8000"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Construir y esperar a que quede sano
         run: docker compose up -d --build --wait --wait-timeout 90
       - name: Petición real al servicio

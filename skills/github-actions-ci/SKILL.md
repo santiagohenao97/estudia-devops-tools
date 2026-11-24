@@ -25,7 +25,7 @@ El agente propone; quien estudia verifica y decide. Nunca presentes un verde com
 - **Cero secretos** en el código o impresos en el log. Si el flujo necesita uno: nombra cuál y para qué, y pide a la persona que lo cree en *Settings → Secrets*. **Nunca pidas ni leas credenciales.**
 - **No interpolar datos del evento dentro de `run:`** (`github.event.*.title`, `github.head_ref`, cuerpos de PR, inputs). Pásalos por `env:` y usa `"$VAR"`.
 - **No usar `pull_request_target`** con checkout del código del PR.
-- **Acciones con versión**: oficiales con la versión mayor (`actions/checkout@v4`); de terceros, idealmente fijadas por SHA. Nunca `@main`. Dependabot las mantiene al día.
+- **Acciones con versión**: oficiales con la versión mayor (`actions/checkout@v7`); de terceros, idealmente fijadas por SHA. Nunca `@main`. Dependabot las mantiene al día.
 - **Siempre `timeout-minutes`.** `concurrency` para cancelar runs viejos de la misma rama (en despliegues: `cancel-in-progress: false`).
 - **`needs`**: construir o publicar depende de que las pruebas pasen.
 - **Evidencia al fallar**: `if: failure()` muestra logs (`docker compose logs`); `if: always()` limpia y sube artefactos de salida.
