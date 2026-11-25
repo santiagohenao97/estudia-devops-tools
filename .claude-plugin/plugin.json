@@ -1,8 +1,8 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "estudia-nube",
-  "version": "0.1.0",
-  "description": "Agentes, skills y comandos del curso Estud-IA Nube para crear, revisar y ajustar contenedores (Docker/Compose) e integración continua (GitHub Actions) en tu propio proyecto.",
+  "version": "0.2.0",
+  "description": "Agentes, skills y comandos del curso Estud-IA Nube para crear, revisar y ajustar contenedores (Docker/Compose), integración continua (GitHub Actions) e infraestructura declarativa (Terraform) en tu propio proyecto.",
   "author": {
     "name": "Santiago Henao",
     "url": "https://github.com/santiagohenao97"
@@ -10,5 +10,5 @@
   "homepage": "https://santiagohenao97.github.io/estudia-nube/",
   "repository": "https://github.com/santiagohenao97/estudia-devops-tools",
   "license": "MIT",
-  "keywords": ["docker", "compose", "github-actions", "ci", "devops", "curso", "espanol"]
+  "keywords": ["docker", "compose", "github-actions", "terraform", "ci", "devops", "curso", "espanol"]
 }

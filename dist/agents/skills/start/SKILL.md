@@ -11,7 +11,7 @@ Haz un diagnóstico **de solo lectura** del proyecto en la carpeta actual. No ed
 En 3 líneas: lenguaje y versión, cómo se arranca, cómo se corren las pruebas (si las hay), y si guarda datos.
 
 ## 2. Qué herramientas tienes
-Comprueba si están instaladas: `git`, `docker` y `docker compose`, `gh` (y si tiene sesión), `actionlint`. Para lo que falte, da el enlace de instalación oficial para el sistema operativo de la persona.
+Comprueba si están instaladas: `git`, `docker` y `docker compose`, `gh` (y si tiene sesión), `actionlint`, `terraform` (u `tofu`). Para lo que falte, da el enlace de instalación oficial para el sistema operativo de la persona.
 
 ## 3. Mapa de piezas
 | Pieza | Encuentro | ¿Existe? | Estado |
@@ -23,9 +23,10 @@ Comprueba si están instaladas: `git`, `docker` y `docker compose`, `gh` (y si t
 | .dockerignore y .env.example (y .env ignorado en git) | E3 | | |
 | Workflow de CI en .github/workflows | E4 | | |
 | docs/container.md y docs/ci.md con estado real | E3 · E4 | | |
+| Infraestructura en Terraform (módulo, entornos, .terraform.lock.hcl; estado fuera de git) y docs/infra.md | E5 | | |
 
 En "Estado" usa: no existe · existe sin probar · ejecutado (solo si ves evidencia).
 
 ## 4. Siguiente paso
-Recomienda **una** cosa, la del encuentro más temprano que esté incompleta, y el comando del plugin que ayuda: `create-container`, `verify`, `create-ci`, `review-container`, `review-ci`.
-Si ves un riesgo serio (por ejemplo `.env` versionado en git), dilo primero.
+Recomienda **una** cosa, la del encuentro más temprano que esté incompleta, y el comando del plugin que ayuda: `create-container`, `verify`, `create-ci`, `review-container`, `review-ci`, o para E5 el agente `terraform-engineer`.
+Si ves un riesgo serio (por ejemplo `.env` o un `*.tfstate` versionado en git), dilo primero.
