@@ -24,9 +24,10 @@ Comprueba si están instaladas: `git`, `docker` y `docker compose`, `gh` (y si t
 | Workflow de CI en .github/workflows | E4 | | |
 | docs/container.md y docs/ci.md con estado real | E3 · E4 | | |
 | Infraestructura en Terraform (módulo, entornos, .terraform.lock.hcl; estado fuera de git) y docs/infra.md | E5 | | |
+| Versiones con etiqueta propia (nunca latest), ruta de salud que informa la versión, comprobación con una operación real y docs/despliegue.md | E6 | | |
 
 En "Estado" usa: no existe · existe sin probar · ejecutado (solo si ves evidencia).
 
 ## 4. Siguiente paso
-Recomienda **una** cosa, la del encuentro más temprano que esté incompleta, y el comando del plugin que ayuda: `create-container`, `verify`, `create-ci`, `review-container`, `review-ci`, o para E5 el agente `terraform-engineer`.
+Recomienda **una** cosa, la del encuentro más temprano que esté incompleta, y el comando del plugin que ayuda: `create-container`, `verify`, `create-ci`, `review-container`, `review-ci`, para E5 el agente `terraform-engineer` o para E6 el agente `release-engineer`.
 Si ves un riesgo serio (por ejemplo `.env` o un `*.tfstate` versionado en git), dilo primero.

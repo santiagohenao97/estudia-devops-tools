@@ -1,6 +1,6 @@
 # estudia-devops-tools
 
-Agentes, skills y comandos de **Claude Code** del curso [Estud-IA Nube · Intermedio](https://santiagohenao97.github.io/estudia-nube/) para que crees, revises y ajustes la cadena de entrega de **tu propio proyecto**: contenedor (Docker y Compose), integración continua (GitHub Actions) e infraestructura declarativa (Terraform).
+Agentes, skills y comandos de **Claude Code** del curso [Estud-IA Nube · Intermedio](https://santiagohenao97.github.io/estudia-nube/) para que crees, revises y ajustes la cadena de entrega de **tu propio proyecto**: contenedor (Docker y Compose), integración continua (GitHub Actions), infraestructura declarativa (Terraform) y despliegue con comprobación y reversión.
 
 Funcionan con cualquier lenguaje (Python, Node, Java, Go u otro) y en macOS, Linux o Windows. **Si no usas Claude Code**, también se instalan como skills en `.agents/skills/` para Codex, Cursor, Gemini CLI, GitHub Copilot, OpenCode y otros (ver [Opción C](#opción-c--otros-agentes-agents)). Cada encuentro del curso agrega herramientas nuevas.
 
@@ -80,7 +80,8 @@ Revisa tu proyecto (solo lectura), te muestra qué piezas tiene y cuáles faltan
 | **E3** · Contenedor, configuración y entorno reproducible | Dockerfile, compose.yaml, .dockerignore, .env.example | `/create-container` · `/review-container` · `/verify` | `container` |
 | **E4** · Integración continua y validación de cambios | Workflows de GitHub Actions, runs en rojo, pruebas que no atrapan errores | `/create-ci` · `/review-ci` · `/diagnose-ci` · `/mutants` | `github-actions-ci` |
 | **E5** · Infraestructura declarativa | Módulo, entornos, entradas, plan y estado con Terraform (empieza sin nube, con el proveedor de Docker) | Agente `terraform-engineer` | |
-| E6 en adelante | Próximamente | | |
+| **E6** · Actualización, salud y reversión | Versiones identificables, una comprobación con una operación real, versión rota controlada y vuelta a la última versión verificada | Agente `release-engineer` | |
+| E7 en adelante | Próximamente | | |
 
 Si instalaste como plugin y otro plugin usa el mismo nombre de comando, escríbelo con prefijo: `/estudia-nube:create-ci`.
 
@@ -104,6 +105,7 @@ Si instalaste como plugin y otro plugin usa el mismo nombre de comando, escríbe
 | `devops-engineer` | Construir y probar una pieza completa paso a paso, explicando cada decisión. Pídelo así: *"usa el agente devops-engineer para dockerizar mi API"*. |
 | `delivery-reviewer` | Revisión de solo lectura con puntaje 0-100 antes de entregar un ejercicio o abrir un pull request. |
 | `terraform-engineer` | Describir con Terraform la infraestructura de tu proyecto (módulo, entornos, estado), leer el plan antes de aplicar y escribir `docs/infra.md`. Pídelo así: *"usa el agente terraform-engineer para describir mi contenedor con Terraform"*. Nunca aplica ni destruye en una nube por ti. |
+| `release-engineer` | Escribir la comprobación de tu versión (una operación real que sale con 1 si falla), verla fallar a propósito, practicar una versión rota y su reversión, y escribir `docs/despliegue.md` con lo que la reversión no resuelve. Pídelo así: *"usa el agente release-engineer para escribir la comprobación de mi servicio"*. Nunca publica etiquetas ni despliega en una nube por ti. |
 
 ### Skills
 
@@ -123,6 +125,7 @@ Se activan solas cuando trabajas en esos archivos, aunque no uses un comando.
 - **No hacen push**, no publican imágenes, no crean secretos ni cambian la configuración de GitHub. Te dan el comando y lo corres tú.
 - **No borran datos**: nada de `docker compose down -v` ni `docker system prune` sin preguntarte.
 - **Infraestructura: plan antes que cambio.** Nunca `-auto-approve`; no aplican ni destruyen en una nube (te dan el comando) y no abren ni suben el estado de Terraform.
+- **Despliegue: versión verificada antes que versión nueva.** Nunca `latest`, nunca mueven una etiqueta publicada y no lanzan despliegues ni abren la red por ti.
 
 ## Problemas comunes
 

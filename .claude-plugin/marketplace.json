@@ -12,8 +12,8 @@
     {
       "name": "estudia-nube",
       "source": "./",
-      "description": "Contenedores (Docker/Compose), integración continua (GitHub Actions) e infraestructura declarativa (Terraform) para tu proyecto, con evidencia honesta de lo que se ejecutó.",
-      "version": "0.2.0"
+      "description": "Contenedores (Docker/Compose), integración continua (GitHub Actions), infraestructura declarativa (Terraform) y despliegue con reversión para tu proyecto, con evidencia honesta de lo que se ejecutó.",
+      "version": "0.3.0"
     }
   ]
 }
